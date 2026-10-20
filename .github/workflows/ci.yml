@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Build, lint, and test
+    # Apple Silicon, macOS 27; this GitHub-hosted image is currently in preview.
+    runs-on: xcode-27
+    timeout-minutes: 45
+    env:
+      BTOP_CODESIGN_IDENTITY: "-"
+    defaults:
+      run:
+        shell: zsh {0}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Check environment and prepare Metal Toolchain
+        run: |
+          set -euo pipefail
+          [[ $(uname -m) == arm64 ]]
+          [[ $(sw_vers -productVersion | cut -d. -f1) -ge 27 ]]
+          sw_vers
+          xcodebuild -version
+          swift --version
+          if ! xcrun metal --version >/dev/null 2>&1; then
+            xcodebuild -downloadComponent MetalToolchain
+          fi
+          # Registration can lag behind the download; discard cached tool lookups.
+          for attempt in {1..12}; do
+            xcrun --kill-cache
+            if xcrun metal --version; then
+              exit 0
+            fi
+            if [[ $attempt -lt 12 ]]; then
+              print "Waiting for Metal Toolchain registration ($attempt/12)..."
+              sleep 5
+            fi
+          done
+          print -u2 '::error::Metal Toolchain downloaded but unavailable after registration checks.'
+          exit 1
+
+      - name: Build and verify application
+        run: scripts/build-app.zsh
+
+      - name: Lint
+        run: scripts/lint.zsh
+
+      - name: Test
+        run: swift test
+
+      - name: Verify application signature
+        run: codesign --verify --deep --strict BtopDesktop.app

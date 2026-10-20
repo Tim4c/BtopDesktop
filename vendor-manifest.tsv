@@ -1,0 +1,3 @@
+# Btop Desktop runtime lock: macOS 27+, ARM64. No mutable download URLs.
+# name	version	SHA-256	archive URL
+btop	1.4.7	b14f472b1774ef0d958653376693ffb06e9928c29a04255b0e0ac7f2fcb64723	https://ghcr.io/v2/homebrew/core/btop/blobs/sha256:b14f472b1774ef0d958653376693ffb06e9928c29a04255b0e0ac7f2fcb64723

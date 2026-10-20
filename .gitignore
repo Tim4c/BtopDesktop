@@ -1,0 +1,43 @@
+# macOS filesystem metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Swift Package Manager build products and local workspace state
+.build/
+.swiftpm/
+.swiftlint_cache
+
+# Xcode build products and per-user settings
+DerivedData/
+build/
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+
+# Generated application bundles and distribution artifacts
+*.app/
+*.dSYM/
+*.dmg
+*.pkg
+*.xcarchive/
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Local logs and temporary files
+*.log
+*.tmp
+
+# Locally downloaded runtime, archive cache, and installer lock
+/graphify-out/
+/Vendor/
+/.vendor-cache/
+/.vendor-install.lock/
+# Keep Package.resolved tracked if dependencies are added to this application.

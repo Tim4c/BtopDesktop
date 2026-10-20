@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+<defs><linearGradient id="g0" gradientUnits="userSpaceOnUse" x1="55.87" y1="31.93" x2="61.12" y2="15.76"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/></linearGradient><linearGradient id="g1" gradientUnits="userSpaceOnUse" x1="65.37" y1="38.83" x2="88.02" y2="22.37"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/></linearGradient><linearGradient id="g2" gradientUnits="userSpaceOnUse" x1="69.00" y1="50.00" x2="91.00" y2="50.00"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/></linearGradient><linearGradient id="g3" gradientUnits="userSpaceOnUse" x1="65.37" y1="61.17" x2="88.83" y2="78.21"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/></linearGradient><linearGradient id="g4" gradientUnits="userSpaceOnUse" x1="55.87" y1="68.07" x2="60.20" y2="81.38"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#000" stop-opacity="0.55"/></linearGradient></defs>
+<ellipse cx="38.14" cy="78.64" rx="11" ry="19" transform="rotate(202.5 38.14 78.64)" fill="#000" fill-opacity="0.55"/>
+<ellipse cx="21.36" cy="61.86" rx="11" ry="19" transform="rotate(247.5 21.36 61.86)" fill="#000" fill-opacity="0.55"/>
+<ellipse cx="21.36" cy="38.14" rx="11" ry="19" transform="rotate(292.5 21.36 38.14)" fill="#000" fill-opacity="0.55"/>
+<ellipse cx="38.14" cy="21.36" rx="11" ry="19" transform="rotate(337.5 38.14 21.36)" fill="#000" fill-opacity="0.55"/>
+<ellipse cx="35.15" cy="64.85" rx="7" ry="10.5" transform="rotate(225 35.15 64.85)" fill="#000"/>
+<ellipse cx="29.00" cy="50.00" rx="7" ry="10.5" transform="rotate(270 29.00 50.00)" fill="#000"/>
+<ellipse cx="35.15" cy="35.15" rx="7" ry="10.5" transform="rotate(315 35.15 35.15)" fill="#000"/>
+<line x1="55.87" y1="31.93" x2="61.12" y2="15.76" stroke="url(#g0)" stroke-width="9.5" stroke-linecap="round"/>
+<line x1="65.37" y1="38.83" x2="88.02" y2="22.37" stroke="url(#g1)" stroke-width="9.5" stroke-linecap="round"/>
+<line x1="69.00" y1="50.00" x2="91.00" y2="50.00" stroke="url(#g2)" stroke-width="9.5" stroke-linecap="round"/>
+<line x1="65.37" y1="61.17" x2="88.83" y2="78.21" stroke="url(#g3)" stroke-width="9.5" stroke-linecap="round"/>
+<line x1="55.87" y1="68.07" x2="60.20" y2="81.38" stroke="url(#g4)" stroke-width="9.5" stroke-linecap="round"/>
+<circle cx="50" cy="50" r="8" fill="#000"/>
+</svg>
