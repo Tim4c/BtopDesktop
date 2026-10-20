@@ -28,12 +28,25 @@ notarized by Apple. macOS may block their first launch; follow the release's ins
 environment. The project currently builds and signs the app locally; it provides no notarized
 release, installer, or automatic updates.
 
-The personal Homebrew tap is being prepared. See
-[Community prereleases and Homebrew](docs/releases.md) for the release process and current
-installation limitations.
-
 Accessibility access enables focused Escape handling and overview-state detection. See
 [Getting started](docs/getting-started.md) for permission details.
+
+## Install with Homebrew
+
+Install the experimental community build from the [personal tap](https://github.com/Tim4c/homebrew-tap):
+
+```sh
+brew install --cask Tim4c/tap/btop-desktop
+```
+
+Requires **macOS 27 or later and Apple Silicon**. The app is signed ad hoc and **not notarized
+by Apple**. If macOS blocks the first launch, follow the
+[opening instructions from Apple](https://support.apple.com/102445) in System Settings →
+Privacy & Security, only if you trust the download.
+
+Quit the app before updating with `brew upgrade --cask btop-desktop`. Accessibility permission
+may need to be granted again after updates. Installation has been tested on the maintainer's
+Mac; feedback from other Macs is welcome.
 
 ## Quick start
 
