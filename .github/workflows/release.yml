@@ -1,0 +1,66 @@
+name: Prepare prerelease
+
+on:
+  push:
+    tags: ["v[0-9]*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prerelease:
+    runs-on: xcode-27
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    env:
+      BTOP_CODESIGN_IDENTITY: "-"
+    defaults:
+      run:
+        shell: zsh {0}
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Verify tag matches application version
+        run: |
+          set -euo pipefail
+          version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Info.plist)
+          [[ "$GITHUB_REF_NAME" == "v$version" ]] || {
+            print -u2 'The tag must match the version in Info.plist.'
+            exit 1
+          }
+
+      - name: Prepare Metal Toolchain
+        run: scripts/prepare-metal.zsh
+
+      - name: Build application
+        run: scripts/build-app.zsh
+
+      - name: Lint
+        run: scripts/lint.zsh
+
+      - name: Test
+        run: swift test
+
+      - name: Package application and Homebrew cask
+        run: scripts/package-release.zsh
+
+      - name: Create draft prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          output="dist/$GITHUB_REF_NAME"
+          gh release create "$GITHUB_REF_NAME" \
+            "$output"/*.zip "$output/SHA256SUMS" "$output/btop-desktop.rb" \
+            --verify-tag --draft --prerelease --latest=false \
+            --title "Btop Desktop $GITHUB_REF_NAME (experimental)" \
+            --notes-file "$output/RELEASE_NOTES.md"

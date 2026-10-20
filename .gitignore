@@ -23,6 +23,7 @@ xcuserdata/
 *.dmg
 *.pkg
 *.xcarchive/
+/dist/
 
 # Editor files
 .idea/

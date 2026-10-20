@@ -6,8 +6,10 @@ Btop Desktop displays CPU, memory, disks, network activity, and processes in a t
 panel. It combines btop's terminal interface with native macOS Settings and a menu bar app. The
 assembled application includes its runtime; Homebrew is not needed to run it.
 
-Personal project under active development. The current setup is intended for building from source on
-the supported macOS environment.
+Personal project under active development. You can build from source on the supported macOS
+environment. Experimental downloads, when available, are listed on the
+[releases page](https://github.com/Tim4c/BtopDesktop/releases); they are signed ad hoc and not
+notarized by Apple. macOS may block their first launch; follow the release's installation notes.
 
 ![Btop Desktop sur macOS](docs/images/Screenshot.jpg)
 
@@ -25,6 +27,10 @@ the supported macOS environment.
 **macOS 27 or later and Apple Silicon (ARM64).** The bundled btop binary also requires this
 environment. The project currently builds and signs the app locally; it provides no notarized
 release, installer, or automatic updates.
+
+The personal Homebrew tap is being prepared. See
+[Community prereleases and Homebrew](docs/releases.md) for the release process and current
+installation limitations.
 
 Accessibility access enables focused Escape handling and overview-state detection. See
 [Getting started](docs/getting-started.md) for permission details.

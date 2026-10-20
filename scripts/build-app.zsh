@@ -34,7 +34,6 @@ build_release() {
 	swift build --package-path "$project_dir" -c release --product BtopDesktop
 }
 
-
 compile_assets() {
 	local build_dir="$1"
 	local assets_dir="$build_dir/BtopDesktop-assets"
@@ -65,6 +64,7 @@ assemble_app() {
 	cp "$project_dir/Vendor/bin/btop" "$resources_dir/bin/"
 	cp -R "$project_dir/Vendor/themes" "$resources_dir/"
 	cp -R "$project_dir/Vendor/licenses/." "$resources_dir/licenses/"
+	cp "$project_dir/LICENSE" "$resources_dir/licenses/BtopDesktop-LICENSE"
 	cp "$project_dir/.build/checkouts/SwiftTerm/LICENSE" \
 		"$resources_dir/licenses/SwiftTerm-LICENSE"
 
