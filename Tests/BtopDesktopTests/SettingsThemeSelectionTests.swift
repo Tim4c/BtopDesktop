@@ -12,6 +12,7 @@ final class SettingsThemeSelectionTests: XCTestCase {
     try "theme[main_fg]=\"#123456\"".write(to: source, atomically: true, encoding: .utf8)
     let imported = try store.importTheme(from: source).resolvingSymlinksInPath()
     XCTAssertTrue(try store.availableThemes().contains(BtopTheme(title: "custom", value: "custom.theme")))
+    XCTAssertTrue(try store.availableThemes().contains(BtopTheme(title: "custom (Imported)", value: imported.path)))
     let applied = expectation(description: "Selected theme applied")
     let controller = SettingsWindowController(
       preferences: AppPreferences(defaults: MemoryDefaults()), onChange: { _ in },

@@ -70,8 +70,11 @@ not written. Recovery can restart the prior configuration; an error is shown to 
 The selector stays disabled while a change is underway.
 
 Bundled themes come from the pinned btop archive. The catalog also includes **Default** and
-**TTY**. Imported entries are labeled **(Imported)** and selected by absolute path, keeping
-them distinct from bundled entries with the same filename. A theme preview temporarily bypasses
+**TTY**. Imported entries are labeled **(Imported)** and selected by absolute path. Their stored
+filenames use the reserved `btopdesktop-imported-` prefix, keeping imports distinct from bundled
+themes with the same original name even when btop saves only a filename.
+Settings hides this prefix. Rename older imported files with this prefix and select them again in Settings.
+A theme preview temporarily bypasses
 grayscale; configured grayscale resumes after Settings loses focus or closes.
 
 ## What Restore Defaults changes

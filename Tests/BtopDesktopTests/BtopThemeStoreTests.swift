@@ -11,12 +11,13 @@ final class BtopThemeStoreTests: XCTestCase {
     let source = fixture.directory.appendingPathComponent("custom.theme")
     try "theme[main_fg]=\"#123456\"\n".write(to: source, atomically: true, encoding: .utf8)
     let destination = try store.importTheme(from: source)
-    let expected = fixture.directory.appendingPathComponent("BtopDesktop/btop/themes/custom.theme")
+    let expected = fixture.directory.appendingPathComponent("BtopDesktop/btop/themes/btopdesktop-imported-custom.theme")
     XCTAssertEqual(destination.path, expected.path)
     try "theme[main_fg]=\"255 128 0\"\n".write(to: source, atomically: true, encoding: .utf8)
     XCTAssertThrowsError(try store.importTheme(from: source))
     XCTAssertTrue(try String(contentsOf: destination, encoding: .utf8).contains("#123456"))
     _ = try store.importTheme(from: source, replacingExisting: true)
+    XCTAssertThrowsError(try store.importTheme(from: destination))
     try FileManager.default.removeItem(at: source)
     XCTAssertTrue(try String(contentsOf: destination, encoding: .utf8).contains("255 128 0"))
   }
@@ -30,7 +31,8 @@ final class BtopThemeStoreTests: XCTestCase {
       let source = fixture.directory.appendingPathComponent(name + ".theme")
       try "theme[main_fg]=\"#123456\"\n".write(to: source, atomically: true, encoding: .utf8)
       XCTAssertThrowsError(try store.importTheme(from: source))
-      let destination = fixture.directory.appendingPathComponent("BtopDesktop/btop/themes/" + name + ".theme")
+      let destination = fixture.directory.appendingPathComponent(
+        "BtopDesktop/btop/themes/btopdesktop-imported-" + name + ".theme")
       XCTAssertFalse(FileManager.default.fileExists(atPath: destination.path))
     }
   }
@@ -47,7 +49,7 @@ final class BtopThemeStoreTests: XCTestCase {
       XCTAssertThrowsError(try store.importTheme(from: source))
     }
     XCTAssertFalse(FileManager.default.fileExists(atPath:
-      fixture.directory.appendingPathComponent("BtopDesktop/btop/themes/invalid.theme").path))
+      fixture.directory.appendingPathComponent("BtopDesktop/btop/themes/btopdesktop-imported-invalid.theme").path))
   }
 
   func testCatalogReadsDoNotRewriteOptionsAndThemeWritesPreserveOtherValues() throws {
@@ -77,6 +79,7 @@ final class BtopThemeStoreTests: XCTestCase {
       BtopConfigurationStore(fileManager: NativeTestFileManager(root: fixture.directory)))
     for source in try FileManager.default.contentsOfDirectory(at: themes, includingPropertiesForKeys: nil)
       where source.pathExtension == "theme" {
+      XCTAssertFalse(source.lastPathComponent.hasPrefix(BtopThemeStore.importedPrefix))
       _ = try store.importTheme(from: source)
     }
   }

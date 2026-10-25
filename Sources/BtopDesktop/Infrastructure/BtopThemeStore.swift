@@ -13,6 +13,7 @@ enum BtopThemeImportError: LocalizedError {
 }
 
 struct BtopThemeStore {
+  static let importedPrefix = "btopdesktop-imported-"
   let configurationStore: BtopConfigurationStore
   let bundledThemes: URL
 
@@ -28,7 +29,9 @@ struct BtopThemeStore {
     let root = try configurationStore.configurationURL(prepareForLaunch: false).deletingLastPathComponent()
     let directory = root.appendingPathComponent("themes", isDirectory: true)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-    let destination = directory.appendingPathComponent(source.deletingPathExtension().lastPathComponent)
+    let name = source.deletingPathExtension().lastPathComponent
+    let filename = name.hasPrefix(Self.importedPrefix) ? name : Self.importedPrefix + name
+    let destination = directory.appendingPathComponent(filename)
       .appendingPathExtension("theme")
     try Self.validateThemeValue(destination.path)
     if FileManager.default.fileExists(atPath: destination.path), !replacingExisting {

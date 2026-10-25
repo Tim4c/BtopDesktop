@@ -19,10 +19,10 @@ extension SettingsWindowController {
     let scoped = source.startAccessingSecurityScopedResource()
     defer { if scoped { source.stopAccessingSecurityScopedResource() } }
     do {
-      let destination = try themeStore.importTheme(from: source, replacingExisting: replacingExisting)
+      _ = try themeStore.importTheme(from: source, replacingExisting: replacingExisting)
       refreshThemes()
       showThemeMessage("Theme imported", detail:
-        "Select \(destination.deletingPathExtension().lastPathComponent) in the Theme selector to apply it.")
+        "Select the imported theme in the Theme selector to apply it.")
     } catch BtopThemeImportError.alreadyExists {
       confirmThemeReplacement(source)
     } catch {

@@ -16,8 +16,10 @@ extension BtopThemeStore {
         includingPropertiesForKeys: [.isRegularFileKey])
       for file in files where file.pathExtension == "theme" {
         guard try file.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile == true else { continue }
+        var title = file.deletingPathExtension().lastPathComponent
+        if !suffix.isEmpty && title.hasPrefix(Self.importedPrefix) { title.removeFirst(Self.importedPrefix.count) }
         themes.append(BtopTheme(
-          title: file.deletingPathExtension().lastPathComponent + suffix,
+          title: title + suffix,
           value: suffix.isEmpty ? file.lastPathComponent : file.resolvingSymlinksInPath().path))
       }
     }
