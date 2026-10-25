@@ -36,6 +36,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Test release script
+        run: python3 scripts/test-release.py
+
       - name: Check environment and prepare Metal Toolchain
         run: scripts/prepare-metal.zsh
 

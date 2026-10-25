@@ -75,6 +75,7 @@ build script checks its availability before compiling. See Apple's
 | `scripts/install-vendor.zsh --force`                | Reinstall from verified cached downloads when possible           |
 | `scripts/update-vendor.zsh`                         | Refresh the btop lock from the latest stable Homebrew metadata   |
 | `scripts/build-app.zsh`                             | Build in release mode, assemble the app, and sign it             |
+| `scripts/release.zsh 0.2.2` | Prepare the version, push main, wait for CI, and push the release tag |
 | `swift build`                                       | Compile the Swift package without assembling a distributable app |
 | `scripts/lint.zsh`                                  | Run strict SwiftLint through SwiftPM                             |
 | `scripts/lint.zsh --fix`                            | Apply supported formatting fixes, then run strict lint           |

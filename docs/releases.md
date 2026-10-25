@@ -33,13 +33,23 @@ regenerating an unpublished candidate. Never replace the assets of a published v
 
 ## Create the draft on GitHub
 
-Commit and push the release preparation first. Then create and push a tag matching
-`CFBundleShortVersionString` exactly:
+Commit your changes first, switch to `main`, and make sure the checkout is clean. Install
+GitHub CLI (`gh`) and authenticate with `gh auth login` if needed. Then run:
 
 ```sh
-git tag -a v0.2.0 -m "Btop Desktop 0.2.0 community prerelease"
-git push origin v0.2.0
+scripts/release.zsh 0.2.2
 ```
+
+The script updates `CFBundleShortVersionString`, increments `CFBundleVersion`, commits only
+`Info.plist`, and pushes `main` to `origin`. It waits for the CI run for that exact commit
+before creating and pushing the matching tag. It refuses older versions, existing remote
+tags, a checkout that changes during CI, or a remote `main` that moves to another commit.
+It never force-pushes or publishes a release.
+
+If a push, network request, or CI check fails, the prepared commit is retained. Fix the
+failure, commit any needed changes, and rerun the same command: the current version can be
+reused without incrementing the build number again. If the tag was already pushed, follow
+its release workflow instead of rerunning the script.
 
 The [release workflow](../.github/workflows/release.yml) builds, lints, tests, and packages the
 tagged code, then creates a **draft prerelease** with the ZIP, checksum, and cask attached. The tag
