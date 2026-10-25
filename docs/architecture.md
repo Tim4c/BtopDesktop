@@ -45,8 +45,9 @@ Finder icon visibility asynchronously and starts `TerminalRuntime`, shows its re
 
 The runtime locates `Resources/bin/btop` and `Resources/themes`, prepares the isolated
 configuration, and creates a `NativePTYConnection`. The C target uses a PTY and resets
-inherited signal state before executing the child. btop receives its configuration path
-and bundled theme directory as command-line arguments.
+inherited signal state before executing the child. btop receives its bundled theme directory
+as a command-line argument and discovers its configuration and imported themes through the
+application-local `XDG_CONFIG_HOME` directory.
 
 The child inherits the environment with `DYLD_LIBRARY_PATH` and `DYLD_FALLBACK_LIBRARY_PATH`
 removed. The runtime sets `TERM=xterm-256color`, `COLORTERM=truecolor`, and application-local

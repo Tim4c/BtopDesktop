@@ -28,14 +28,15 @@ struct BtopConfigurationStore {
       throw BtopConfigurationStoreError.applicationSupportUnavailable
     }
 
-    let directory = applicationSupport.appendingPathComponent("BtopDesktop", isDirectory: true)
+    let root = applicationSupport.appendingPathComponent("BtopDesktop", isDirectory: true)
+    let directory = root.appendingPathComponent("btop", isDirectory: true)
     try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
     let configuration = directory.appendingPathComponent("btop.conf", isDirectory: false)
 
     if !fileManager.fileExists(atPath: configuration.path(percentEncoded: false)) {
-      let legacyConfiguration = fileManager.homeDirectoryForCurrentUser
-        .appendingPathComponent(".config/btop/btop.conf", isDirectory: false)
-      if fileManager.fileExists(atPath: legacyConfiguration.path(percentEncoded: false)) {
+      let candidates = [root.appendingPathComponent("btop.conf"), fileManager.homeDirectoryForCurrentUser
+        .appendingPathComponent(".config/btop/btop.conf", isDirectory: false)]
+      if let legacyConfiguration = candidates.first(where: { fileManager.fileExists(atPath: $0.path) }) {
         // Do not use FileManager.copyItem here: it can report a spurious
         // "item already exists" failure while Finder is observing this folder.
         // A single atomic write is enough for this one-time import.

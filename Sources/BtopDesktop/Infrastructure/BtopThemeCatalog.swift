@@ -8,7 +8,7 @@ struct BtopTheme: Equatable, Sendable {
 extension BtopThemeStore {
   func availableThemes() throws -> [BtopTheme] {
     let root = try configurationStore.configurationURL(prepareForLaunch: false).deletingLastPathComponent()
-    let imported = root.appendingPathComponent("btop/themes", isDirectory: true)
+    let imported = root.appendingPathComponent("themes", isDirectory: true)
     var themes = [BtopTheme(title: "Default", value: "Default"), BtopTheme(title: "TTY", value: "TTY")]
     for (directory, suffix) in [(bundledThemes, ""), (imported, " (Imported)")] {
       guard FileManager.default.fileExists(atPath: directory.path) else { continue }

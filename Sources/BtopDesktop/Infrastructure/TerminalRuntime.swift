@@ -49,13 +49,14 @@ actor TerminalRuntime {
     var environment = ProcessInfo.processInfo.environment
     environment.removeValue(forKey: "DYLD_LIBRARY_PATH")
     environment.removeValue(forKey: "DYLD_FALLBACK_LIBRARY_PATH")
-    environment["XDG_CONFIG_HOME"] = configuration.deletingLastPathComponent().path
-    environment["XDG_STATE_HOME"] = configuration.deletingLastPathComponent()
+    let configurationRoot = configuration.deletingLastPathComponent().deletingLastPathComponent()
+    environment["XDG_CONFIG_HOME"] = configurationRoot.path
+    environment["XDG_STATE_HOME"] = configurationRoot
       .appendingPathComponent("state", isDirectory: true).path
     environment["TERM"] = "xterm-256color"
     environment["COLORTERM"] = "truecolor"
     let child = try NativePTYConnection(executable: tools.btop.path,
-                       arguments: ["-c", configuration.path, "--themes-dir", tools.themes.path],
+                       arguments: ["--themes-dir", tools.themes.path],
                        environment: environment.map { "\($0.key)=\($0.value)" }, bridge: output)
     process = child
     bridge = output

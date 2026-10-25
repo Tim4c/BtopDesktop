@@ -11,12 +11,18 @@ There are two separate sets of settings:
 | Presentation preferences | `UserDefaults`, domain `local.btop.desktop`           | Modes, appearance, dimensions, and anchors |
 | Imported themes          | `~/Library/Application Support/BtopDesktop/btop/themes/` | User color themes |
 | btop state and log        | `~/Library/Application Support/BtopDesktop/state/` | Isolated btop runtime state |
-| btop configuration       | `~/Library/Application Support/BtopDesktop/btop.conf` | Monitor settings and themes                |
+| btop configuration       | `~/Library/Application Support/BtopDesktop/btop/btop.conf` | Monitor settings and themes                |
 | Terminal log             | `~/Library/BtopDesktop/native-terminal.log`                      | PTY startup and shutdown messages    |
 
-If Btop Desktop’s configuration file does not exist, the application imports
-`~/.config/btop/btop.conf` when available. Otherwise, it creates an initial file. Subsequent
-launches use the separate configuration without synchronizing with the original file.
+If Btop Desktop’s configuration file does not exist, the application first copies its previous
+`~/Library/Application Support/BtopDesktop/btop.conf`, retaining the original as a backup.
+Existing options and imported theme paths are preserved; the imported theme files stay in place.
+If no previous app configuration exists, it imports `~/.config/btop/btop.conf` when available,
+otherwise it creates an initial file. Existing destination configurations are never overwritten.
+Subsequent launches use the separate configuration without synchronizing with the original file.
+
+btop discovers this configuration and its adjacent `themes/` directory through the app-local
+`XDG_CONFIG_HOME`. The app does not pass `-c`, which bypasses user-theme discovery in btop 1.4.8.
 
 At each launch, the application enforces these settings for integration with the embedded terminal:
 

@@ -26,7 +26,7 @@ struct BtopThemeStore {
     let content = try String(contentsOf: source, encoding: .utf8)
     try validate(content)
     let root = try configurationStore.configurationURL(prepareForLaunch: false).deletingLastPathComponent()
-    let directory = root.appendingPathComponent("btop/themes", isDirectory: true)
+    let directory = root.appendingPathComponent("themes", isDirectory: true)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     let destination = directory.appendingPathComponent(source.deletingPathExtension().lastPathComponent)
       .appendingPathExtension("theme")

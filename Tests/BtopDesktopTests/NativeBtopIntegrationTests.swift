@@ -26,8 +26,8 @@ final class NativeBtopIntegrationTests: XCTestCase {
     defer { fixture.cleanup() }
     let configurationStore = BtopConfigurationStore(fileManager: NativeTestFileManager(root: fixture.directory))
     let configuration = try configurationStore.configurationURL()
-    let theme = terminalSync ? "integration-custom" : "tokyo-night"
-    if terminalSync { try importIntegrationTheme(into: configurationStore, directory: fixture.directory) }
+    let theme = terminalSync
+      ? try importIntegrationTheme(into: configurationStore, directory: fixture.directory) : "tokyo-night"
     try "terminal_sync = \(terminalSync)\ncolor_theme = \"\(theme)\"\nlog_level = \"DEBUG\"\n"
       .write(to: configuration, atomically: true, encoding: .utf8)
     let runtime = TerminalRuntime(
@@ -52,6 +52,7 @@ final class NativeBtopIntegrationTests: XCTestCase {
     controller.onLoadStateChanged = originalCallback
     let terminal = try XCTUnwrap(controller.view.subviews.compactMap { $0 as? NativeTerminalView }.first)
     try await Task.sleep(for: .milliseconds(300))
+    if terminalSync { verifyImportedThemeColors(terminal) }
     try await verifyInteraction(window: window, panel: panel, terminal: terminal,
                                 controller: controller, resources: resources)
     try await verifySettings(window: window, preferences: preferences, panel: panel, terminal: terminal)
@@ -60,14 +61,22 @@ final class NativeBtopIntegrationTests: XCTestCase {
     let savedConfiguration = try String(contentsOf: configuration, encoding: .utf8)
     XCTAssertTrue(savedConfiguration.contains("terminal_sync = \(terminalSync)"))
     XCTAssertFalse(terminal.getTerminal().synchronizedOutputActive)
-    // btop 1.4.8 does not initialize its logger when launched with -c.
     XCTAssertTrue(savedConfiguration.contains("color_theme = \"\(theme)\""))
   }
 
-  private func importIntegrationTheme(into store: BtopConfigurationStore, directory: URL) throws {
+  private func importIntegrationTheme(into store: BtopConfigurationStore, directory: URL) throws -> String {
     let source = directory.appendingPathComponent("integration-custom.theme")
     try "theme[main_fg]=\"#123456\"\n".write(to: source, atomically: true, encoding: .utf8)
-    _ = try BtopThemeStore(configurationStore: store).importTheme(from: source)
+    return try BtopThemeStore(configurationStore: store).importTheme(from: source).path
+  }
+
+  @MainActor private func verifyImportedThemeColors(_ terminal: NativeTerminalView) {
+    let grid = terminal.getTerminal()
+    XCTAssertTrue((0..<grid.rows).contains { row in
+      (0..<grid.cols).contains { column in
+        grid.getCharData(col: column, row: row)?.attribute.fg == .trueColor(red: 18, green: 52, blue: 86)
+      }
+    }, "The imported theme's foreground must be rendered, not merely saved in the configuration.")
   }
 
   @MainActor private func makePreferences() -> AppPreferences {

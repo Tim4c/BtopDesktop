@@ -15,7 +15,7 @@ final class NativeRuntimeTests: XCTestCase {
     async let first: Void = fixture.runtime.stop()
     async let second: Void = fixture.runtime.stop()
     _ = await (first, second)
-    let saved = fixture.directory.appendingPathComponent("BtopDesktop/btop.conf")
+    let saved = fixture.directory.appendingPathComponent("BtopDesktop/btop/btop.conf")
     XCTAssertEqual(try String(contentsOf: saved, encoding: .utf8), "saved_on_sigint = true\n")
     XCTAssertTrue(endpoint.output.hasTerminated)
   }
@@ -62,7 +62,7 @@ final class NativeRuntimeTests: XCTestCase {
     let restarted = try await fixture.runtime.startWithTheme("Default", onTermination: nil)
     XCTAssertTrue(endpoint.output.exitedSuccessfully)
     XCTAssertFalse(restarted.output.hasTerminated)
-    let configuration = fixture.directory.appendingPathComponent("BtopDesktop/btop.conf")
+    let configuration = fixture.directory.appendingPathComponent("BtopDesktop/btop/btop.conf")
     let saved = try String(contentsOf: configuration, encoding: .utf8)
     XCTAssertTrue(saved.contains("saved_on_sigint = true"))
     XCTAssertTrue(saved.contains("color_theme = \"Default\""))
@@ -80,7 +80,7 @@ final class NativeRuntimeTests: XCTestCase {
     let endpoint = try await fixture.runtime.start()
     endpoint.output.attach { _ in ready.fulfill() }
     await fulfillment(of: [ready], timeout: 5)
-    let configuration = fixture.directory.appendingPathComponent("BtopDesktop/btop.conf")
+    let configuration = fixture.directory.appendingPathComponent("BtopDesktop/btop/btop.conf")
     try "save_config_on_exit = false\n".write(to: configuration, atomically: true, encoding: .utf8)
     do {
       try await fixture.runtime.stopForThemeChange("Default")
@@ -118,7 +118,7 @@ final class NativeRuntimeTests: XCTestCase {
       _ = try await fixture.runtime.startWithTheme("Default", onTermination: nil)
       XCTFail("A forced stop must not apply a theme")
     } catch TerminalRuntimeError.unsafeThemeChange {}
-    let configuration = fixture.directory.appendingPathComponent("BtopDesktop/btop.conf")
+    let configuration = fixture.directory.appendingPathComponent("BtopDesktop/btop/btop.conf")
     XCTAssertFalse(try String(contentsOf: configuration, encoding: .utf8).contains("color_theme"))
   }
 }

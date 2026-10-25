@@ -21,7 +21,7 @@ struct NativeFixture {
       #!/usr/bin/python3
       import signal, sys, time, tty, os, struct, fcntl, termios
       from pathlib import Path
-      configuration = Path(sys.argv[sys.argv.index('-c') + 1])
+      configuration = Path(os.environ['XDG_CONFIG_HOME']) / 'btop' / 'btop.conf'
       tty.setraw(sys.stdin.fileno())
       def stop(signum, frame):
           configuration.write_text('saved_on_sigint = true\\n')
