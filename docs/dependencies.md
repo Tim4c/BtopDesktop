@@ -6,7 +6,7 @@
 
 | Component        | Version/source of truth                                    | Role                                               |
 | ---------------- | ---------------------------------------------------------- | -------------------------------------------------- |
-| btop             | 1.4.7; `vendor-manifest.tsv` locks archive URL and SHA-256 | Monitoring process, themes, and terminal interface |
+| btop             | 1.4.8; `vendor-manifest.tsv` locks archive URL and SHA-256 | Monitoring process, themes, and terminal interface |
 | SwiftTerm        | 1.19.0; `Package.swift` and `Package.resolved`             | Embedded native terminal                           |
 | SwiftLintPlugins | 0.65.1; `Package.swift` and `Package.resolved`             | Development/build lint tooling                     |
 
@@ -56,7 +56,7 @@ notarization require a separate distribution workflow.
 
 ## Embedded licenses
 
-- **btop 1.4.7**: Apache-2.0; its license and pinned archive provenance accompany the executable.
+- **btop 1.4.8**: Apache-2.0; its license and pinned archive provenance accompany the executable.
 - **SwiftTerm**: MIT; its license is copied into the application resources.
 - **SwiftLintPlugins**: development tooling, managed by SwiftPM and not bundled in the app.
 

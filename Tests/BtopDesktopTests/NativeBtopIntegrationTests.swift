@@ -52,18 +52,16 @@ final class NativeBtopIntegrationTests: XCTestCase {
     controller.onLoadStateChanged = originalCallback
     let terminal = try XCTUnwrap(controller.view.subviews.compactMap { $0 as? NativeTerminalView }.first)
     try await Task.sleep(for: .milliseconds(300))
-    try await verifyInteraction(window: window, panel: panel, terminal: terminal, controller: controller)
+    try await verifyInteraction(window: window, panel: panel, terminal: terminal,
+                                controller: controller, resources: resources)
     try await verifySettings(window: window, preferences: preferences, panel: panel, terminal: terminal)
     await runtime.stop()
-    let saved = fixture.directory.appendingPathComponent("BtopDesktop/btop.conf")
-    XCTAssertGreaterThan(try Data(contentsOf: saved).count, 500)
-    let savedConfiguration = try String(contentsOf: saved, encoding: .utf8)
+    XCTAssertGreaterThan(try Data(contentsOf: configuration).count, 500)
+    let savedConfiguration = try String(contentsOf: configuration, encoding: .utf8)
     XCTAssertTrue(savedConfiguration.contains("terminal_sync = \(terminalSync)"))
     XCTAssertFalse(terminal.getTerminal().synchronizedOutputActive)
-    let log = try String(contentsOf:
-      fixture.directory.appendingPathComponent("BtopDesktop/state/btop.log"), encoding: .utf8)
-    XCTAssertTrue(log.contains("Loading theme file:"))
-    XCTAssertTrue(log.contains("\(theme).theme"))
+    // btop 1.4.8 does not initialize its logger when launched with -c.
+    XCTAssertTrue(savedConfiguration.contains("color_theme = \"\(theme)\""))
   }
 
   private func importIntegrationTheme(into store: BtopConfigurationStore, directory: URL) throws {
@@ -85,7 +83,7 @@ final class NativeBtopIntegrationTests: XCTestCase {
 
   @MainActor private func verifyInteraction(
     window: DesktopWindowController, panel: DesktopPanel,
-    terminal: NativeTerminalView, controller: TerminalViewController
+    terminal: NativeTerminalView, controller: TerminalViewController, resources: URL
   ) async throws {
     XCTAssertTrue(screen(terminal).contains("cpu"))
     XCTAssertTrue(panel.ignoresMouseEvents)
@@ -103,13 +101,17 @@ final class NativeBtopIntegrationTests: XCTestCase {
     XCTAssertTrue(panel.hasExplicitClickFocus)
     XCTAssertTrue(panel.canBecomeKey)
     // Input and terminal redraw are checked against the real program, not a fixture.
+    let manifest = try String(contentsOf: resources.appendingPathComponent("licenses/vendor-manifest.tsv"),
+                              encoding: .utf8)
+    let entry = try XCTUnwrap(manifest.split(separator: "\n").first { $0.hasPrefix("btop\t") })
+    let version = try XCTUnwrap(entry.split(separator: "\t").dropFirst().first)
     controller.send(source: terminal, data: Array("m".utf8)[...])
     let clock = ContinuousClock()
     let deadline = clock.now.advanced(by: .seconds(5))
-    while !screen(terminal).contains("v1.4.7") && clock.now < deadline {
+    while !screen(terminal).contains("v\(version)") && clock.now < deadline {
       try await Task.sleep(for: .milliseconds(20))
     }
-    XCTAssertTrue(screen(terminal).contains("v1.4.7"))
+    XCTAssertTrue(screen(terminal).contains("v\(version)"))
     controller.send(source: terminal, data: [27][...])
   }
 
